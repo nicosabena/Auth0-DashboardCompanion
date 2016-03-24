@@ -77,56 +77,57 @@ The application itself is protected by Auth0 authentication. Thus we need to cre
 If we need special access control for the application, we can write a custom rule (such as "**White list for a specific app**").
 
 ###Configuring the app
-A few values will need configuration in the `<appSettings>
-    ` section of `web.config`.
+A few values will need configuration in the `appSettings` section of `web.config`.
 
-    ```xml
-    <add key="auth0:ClientId" value="[clientId for the app]"/>
-    <add key="auth0:ClientSecret" value="[clientSecret for the app]"/>
-    <add key="auth0:Domain" value="[your account domain]"/>
+```xml
+<add key="auth0:ClientId" value="[clientId for the app]"/>
+<add key="auth0:ClientSecret" value="[clientSecret for the app]"/>
+<add key="auth0:Domain" value="[your account domain]"/>
 
-    <!-- The dashboard domain is manage.auth0.com for cloud accounts,
-    but will be different for on-premises installations -->
-    <add key="auth0:DashboardDomain" value="manage.auth0.com"/>
+<!-- The dashboard domain is manage.auth0.com for cloud accounts,
+but will be different for on-premises installations -->
+<add key="auth0:DashboardDomain" value="manage.auth0.com"/>
 
-    <!-- this token should be built using the Api Token Generator at
-    https://auth0.com/docs/api/v2, with scopes read:rules,
-    read:clients and read:client_keys -->
-    <add key="ApiAccessToken" value="[the generated token]"/>
-    ```
+<!-- this token should be built using the Api Token Generator at
+https://auth0.com/docs/api/v2, with scopes read:rules,
+read:clients and read:client_keys -->
+<add key="ApiAccessToken" value="[the generated token]"/>
+```
 
-    The first three values are the standard ones for every app protected by Auth0. The `DashboardDomain` allows us to properly generate links to the Dashboard for every app and rule in the user interface. Finally, the access token, generated in [https://auth0.com/docs/api/v2](https://auth0.com/docs/api/v2), is what gives the application the permissions to gather the required data.
-    ## Try mode
-    There is a "try mode" that can be accessed at /Apps/Try that allows the user to directly
-    enter the account name and the api access token without using the configured values. 
-    You can try this at [https://dashboardcompanion.azurewebsites.net/Apps/Try](https://dashboardcompanion.azurewebsites.net/Apps/Try).
+The first three values are the standard ones for every app protected by Auth0. The `DashboardDomain` allows us to properly generate links to the Dashboard for every app and rule in the user interface. Finally, the access token, generated in [https://auth0.com/docs/api/v2](https://auth0.com/docs/api/v2), is what gives the application the permissions to gather the required data.
+
+## Try mode
+
+There is a "try mode" that can be accessed at /Apps/Try that allows the user to directly
+enter the account name and the api access token without using the configured values. 
+You can try this at [https://dashboardcompanion.azurewebsites.net/Apps/Try](https://dashboardcompanion.azurewebsites.net/Apps/Try).
 
 
-    ##A few notes
-    ####Rule stages
-    The application read rules for the `login_success` stage. If we have rules for other stages in the pipeline, we can read them all changing:
+##A few notes
+####Rule stages
+The application read rules for the `login_success` stage. If we have rules for other stages in the pipeline, we can read them all changing:
 
-    ```c#
-    var rulesTask = apiClient.Rules.GetAllAsync(fields: "name,script,id,enabled,order");
-    ```
+```c#
+var rulesTask = apiClient.Rules.GetAllAsync(fields: "name,script,id,enabled,order");
+```
 
-    to:
-    ```c#
-    var rulesStages = new[] { "login_success", "login_failure", "pre_authorize", "user_registration", "user_blocked" };
-    var rulesTask =
+to:
+```c#
+var rulesStages = new[] { "login_success", "login_failure", "pre_authorize", "user_registration", "user_blocked" };
+var rulesTask =
     Task.WhenAll(
-    rulesStages.Select(
-    stage => apiClient.Rules.GetAllAsync(
-    fields: "name,script,id,enabled,order", stage: stage)))
-    .ContinueWith(t => t.Result.SelectMany(r => r));
-    ```
+        rulesStages.Select(
+            stage => apiClient.Rules.GetAllAsync(
+                fields: "name,script,id,enabled,order", stage: stage)))
+        .ContinueWith(t => t.Result.SelectMany(r => r));
+```
 
-    ####Script analisis
-    The parsing of the rule script to find a specific pattern is done with regular expressions in the `RulesScriptParser` class, with tests in the `RuleParsingTests` class.
-    This would be the place to put fixes if you use a different pattern to identify applications in scripts.
+####Script analisis
+The parsing of the rule script to find a specific pattern is done with regular expressions in the `RulesScriptParser` class, with tests in the `RuleParsingTests` class.
+This would be the place to put fixes if you use a different pattern to identify applications in scripts.
 
-    ####Duplicated names
-    There is a possibility of inadvertedly using the same name for two (or more) different applications. This can cause that a rule that was originally thought for an specific app is now executing for more than one case.
-    A warning label will be shown in that situation:
+####Duplicated names
+There is a possibility of inadvertedly using the same name for two (or more) different applications. This can cause that a rule that was originally thought for an specific app is now executing for more than one case.
+A warning label will be shown in that situation:
 
-    ![Duplicated name](http://i.imgur.com/d5geYLV.png)
+![Duplicated name](http://i.imgur.com/d5geYLV.png)
