@@ -1,0 +1,47 @@
+﻿@using DashboardCompanion.Helpers
+@model IEnumerable<KeyValuePair<Auth0.Core.Rule, DashboardCompanion.Matching.RuleClientsMatch>>
+<table class="table table-hover" id="rulestable">
+    <caption class="text-left">Rules and their referenced apps</caption>
+    <thead>
+    <tr>
+        <th>Rule</th>
+        <th>Applies to</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in this.Model.OrderBy(c => c.Key.Order))
+    {
+        var rule = item.Key;
+        <tr class="@(rule.Enabled == false ? "rule-disabled" : "") @(item.Value == null ? "rule-common" : "")">
+            <td><a class="@(rule.Enabled == false ? "text-muted" : "")" href="@Url.RuleSettings(rule)">@rule.Name@(rule.Enabled == false ? " (currently disabled)" : "")</a></td>
+            <td>
+                @{
+                    var match = item.Value;
+                    if (match == null)
+                    {
+                        <span>All apps</span>
+                    }
+                    else if (match.MatchedClients.Any())
+                    {
+                        foreach (var client in match.MatchedClients)
+                        {
+                            <a href="@Url.ClientSettings(client)">
+                                <span>@client.Name</span>
+                            </a>
+                        }
+                        if (match.MatchedClients.Count() > 1)
+                        {
+                            <span class="label label-danger" title="This rule references a client by name, and more than one app with the same name was found">Possible error: two apps referenced with the same name</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>An app with @(match.Reference.ClientName != null ? "name" : "clientId") <b>'@(match.Reference.ClientName??match.Reference.ClientId)'</b></span>
+                        <span class="label label-danger" title="This rule references a rule that was not found">not found</span>
+                    }
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

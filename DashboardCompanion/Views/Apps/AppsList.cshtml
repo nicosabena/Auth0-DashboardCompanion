@@ -1,0 +1,39 @@
+﻿@using DashboardCompanion.Helpers
+@model System.Collections.Generic.IEnumerable<DashboardCompanion.Models.ClientToRulesViewModel>
+    <table class="table table-hover" id="appstable">
+        <caption class="text-left">Apps and their related rules</caption>
+        <thead>
+            <tr>
+                <th>Apps</th>
+                <th>Related rules</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in this.Model.OrderBy(c => c.Client.Name))
+            {
+                <tr>
+                    <td><a href="@Url.ClientSettings(item.Client)">@item.Client.Name</a></td>
+                    <td>
+                        @if (item.Rules.Any())
+                {
+                            <ul class="list-unstyled">
+                                @foreach (var relatedRule in item.Rules.OrderBy(r => r.Rule.Order).ThenBy(r => r.Rule.Name))
+                                {
+                                    var rule = relatedRule.Rule;
+                                    <li class="@(rule.Enabled == false ? "rule-disabled" : "") @(!relatedRule.SpecificForApp ? "rule-common": "")">
+                                        <a href="@Url.RuleSettings(rule)">
+                                            <span class="@(rule.Enabled == false ? "text-muted" : "")">@rule.Name@(rule.Enabled == false ? " (currently disabled)" : "")</span>
+                                        </a>
+                                        @if (relatedRule.SpecificForApp)
+                                        {
+                                            <span class="label label-primary" title="This rule is written explicitly for this particular app">Specific for this app</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

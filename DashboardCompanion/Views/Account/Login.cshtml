@@ -1,0 +1,26 @@
+﻿@using System.Configuration
+@model dynamic
+
+@{
+    ViewBag.Title = "Login";
+}
+<div class="page-header">
+    <h1>Login</h1>
+    <p>A login is required to access the application (or @Html.ActionLink("try without login", "Try", new { Controller = "Apps" }))</p>
+</div>
+<div id="hiw-login-container">
+
+</div>
+@section scripts
+{
+    <script src="http://cdn.auth0.com/js/lock-9.min.js"></script>
+    <script>
+        // Initialize Auth0Lock with your `clientID` and `domain`
+        var lock = new Auth0Lock('@ConfigurationManager.AppSettings["auth0:clientId"]', '@ConfigurationManager.AppSettings["auth0:domain"]');
+
+        lock.show({
+            container: 'hiw-login-container',
+            callbackURL: 'http://localhost:55250/LoginCallback.ashx'
+        });
+    </script>
+}

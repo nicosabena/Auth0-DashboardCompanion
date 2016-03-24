@@ -1,0 +1,63 @@
+﻿@model DashboardCompanion.Models.AppsViewModel
+
+@{
+    ViewBag.Title = "Apps and related rules";
+}
+
+<h2>@ViewBag.Title</h2>
+<p>
+    This page shows how apps (clients) in your Auth0 account are related to existing rules.
+    <a class="" role="button" data-toggle="collapse" href="#details" aria-expanded="false" aria-controls="collapseExample">Details</a>
+</p>
+
+<div class="collapse bs-callout bs-callout-primary" id="details">
+    <h4>Matching rules to apps</h4>
+    <p>
+        Every registered rule is analized to see if applies to only a specific client app by looking for the following patterns in the script:
+    </p>
+    <pre>
+    context.clientName [ === | !== | == | != ] 'My app'
+    context.clientId [ === | !== | == | != ] 'AppId'
+    </pre>
+    <p>Both single and double quotes are supported. Rules that don't mention a specific app are deemed as common to all apps.</p>
+</div>
+<div class="checkbox">
+    <label for="hidecommonrules"><input type="checkbox" value="hidecommonrules" id="hidecommonrules" />Hide rules that apply to all apps</label>
+</div>
+<div class="checkbox">
+    <label for="hidedisabledrules"><input type="checkbox" value="hidedisabledrules" id="hidedisabledrules" />Hide disabled rules</label>
+</div>
+<div>
+    <ul id="tabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#apps" role="tab" data-toggle="tab">Apps</a></li>
+        <li role="presentation"><a href="#rules" role="tab" data-toggle="tab">Rules</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="apps">
+            @Html.Partial("AppsList", this.Model.Clients)
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="rules">
+            @Html.Partial("RulesList", this.Model.Rules)
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#tabs a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+        $(function () {
+            $('#hidedisabledrules').change(function () {
+                $('#appstable li.rule-disabled,#rulestable tr.rule-disabled').toggleClass('rule-disabled-hidden', this.checked);
+            }).change();
+            $('#hidecommonrules').change(function () {
+                $('#appstable li.rule-common,#rulestable tr.rule-common').toggleClass('rule-common-hidden', this.checked);
+            }).change();
+        });
+    </script>
+}

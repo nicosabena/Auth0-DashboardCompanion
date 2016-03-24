@@ -1,0 +1,40 @@
+﻿@model DashboardCompanion.Models.TryPostData
+
+<div class="page-header">
+    <h1>
+        Try Dashboard Companion <small>for free!</small>
+    </h1>
+
+    <p>
+        Go to your account dashboard at <a href="https://auth0.com/docs/api/v2">https://auth0.com/docs/api/v2</a> and get a token
+        with the following scopes:
+    </p>
+
+        <ul>
+            <li><code>read:clients</code></li>
+            <li><code>read:client_keys</code></li>
+            <li><code>read:rules</code></li>
+        </ul>
+    <p>Paste the token here, complete your account domain, and you are good to go!
+
+    </p>
+    <form method="POST">
+        @if (!this.ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger" role="alert">@Html.ValidationSummary(false)</div>
+        }
+        <div class="form-group">
+            <label for="ApiToken">Generated token</label>
+            @Html.TextAreaFor(m => m.ApiToken, 3, 0, new { @class = "form-control", placeholder = "Token", autocomplete = "on" })
+        </div>
+        <div class="form-group" style="max-width:200px">
+            <label for="account">Your account domain</label>
+            <div class="input-group">
+                @*<input type="text" id="account" name="account" class="form-control" placeholder="Your account" aria-describedby="basic-addon2">*@
+                @Html.TextBoxFor(m => m.Account, new { @class = "form-control", placeholder = "Your account" })
+                <span class="input-group-addon" id="basic-addon2">.auth0.com</span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Go!</button>
+    </form>
+</div>
