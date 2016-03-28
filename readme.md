@@ -47,7 +47,7 @@ The management API uses Json Web Tokens (JWT) to authenticate requests, so we ne
 
 ##The app list view
 With all the information gathered and the scripts analized, we can relate apps and rules. This is displayed in the default view like this:
-![Apps view](http://i.imgur.com/j6ry4ea.png)
+![Apps view](http://i.imgur.com/T58lLcn.png)
 
 For each application we show the list of rules that will execute, presented in their execution order. This list includes both common rules (that apply to every app) and rules that are specific for the app.
 
@@ -102,6 +102,7 @@ There is a "try mode" that can be accessed at /Apps/Try that allows the user to 
 enter the account name and the api access token without using the configured values. 
 You can try this at [https://dashboardcompanion.azurewebsites.net/Apps/Try](https://dashboardcompanion.azurewebsites.net/Apps/Try).
 
+![Try mode](http://i.imgur.com/e0EuP9W.png)
 
 ##A few notes
 ####Rule stages
