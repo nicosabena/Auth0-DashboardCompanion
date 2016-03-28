@@ -182,7 +182,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="LoginCallback.ashx" />
-    <None Include="private.config" />
+    <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\DashboardCompanion - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
