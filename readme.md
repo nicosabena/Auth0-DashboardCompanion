@@ -8,24 +8,27 @@ Rules in [Auth0](https://auth0.com/) can be written to act on a specific app (cl
 Those templates contains code that perform some action if the app name or id matches a specific string:
 ```javascript
 function (user, context, callback) {
+    if (context.clientName === 'TheAppToCheckAccessTo') {
+        // do some logic
+    }
 
-if (context.clientName === 'TheAppToCheckAccessTo') {
-// do some logic
+    callback(null, user, context);
 }
-
-callback(null, user, context);
 ```
+
 Sometimes the check is based on inequality:
+
 ```javascript
 function (user, context, callback) {
+    if (context.clientName !== 'TheAppToCheckAccessTo') {
+        return callback(null, user, context);
+    }
+    // do something
 
-if (context.clientName !== 'TheAppToCheckAccessTo') {
-return callback(null, user, context);
+    callback(null, user, context);
 }
-// do something
-
-callback(null, user, context);
 ```
+
 ##Relating apps and rules
 While looking at the rule name (if aptly chosen) or code will usually provide a good indication to which app (if any) it applies, it can be difficult from an app perspective to identify all the rules that apply to a specific application.
 
