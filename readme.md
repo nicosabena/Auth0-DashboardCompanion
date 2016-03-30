@@ -3,7 +3,7 @@ Try it now at [https://dashboardcompanion.azurewebsites.net/Apps/Try](https://da
 
 ## Introduction
 
-Rules in [Auth0](https://auth0.com/) can be written to act on a specific app (client), as shown in the "**Whitelist for a specific app**" or the "**Allow access during weekdays for a specific app**" [rule templates](https://manage.auth0.com/#/rules/new).
+[Rules](https://auth0.com/docs/rules) in [Auth0](https://auth0.com/) can be written to act on a specific app (client), as shown in the "**Whitelist for a specific app**" or the "**Allow access during weekdays for a specific app**" [rule templates](https://manage.auth0.com/#/rules/new).
 
 Those templates contains code that perform some action if the app name or id matches a specific string:
 ```javascript
@@ -40,13 +40,13 @@ context.[clientName|clientId] [=== | !== | == | !=] 'expectedId/name'
 ##Getting the information from Auth0
 To get the registered rules and apps (clients), the application uses the [Management API v2](https://auth0.com/docs/api/v2).
 
-The management API uses Json Web Tokens (JWT) to authenticate requests, so we need to get a valid token to access the required endpoints. Tokens are built in the API documentation page, and they take specific *scopes* (permissions). For this use case, we will need
+The management API uses [JSON Web Tokens](https://jwt.io/) (JWT) to authenticate requests, so we need to get a valid token to access the required endpoints. Tokens are built in the API documentation page, and they take specific *scopes* (permissions). For this use case, we will need
 
  * `read:clients` and `read:client_keys` scopes to access the [/api/v2/clients](https://auth0.com/docs/api/v2#!/Clients/get_clients) endpoint to get the apps, and
  * `read:rules` scope for the [/api/v2/rules](https://auth0.com/docs/api/v2#!/Rules/get_rules) endpoint to get the rules.
 
 ##The app list view
-With all the information gathered and the scripts analized, we can relate apps and rules. This is displayed in the default view like this:
+With all the information gathered and the scripts analyzed, we can relate apps and rules. This is displayed in the default view like this:
 ![Apps view](http://i.imgur.com/T58lLcn.png)
 
 For each application we show the list of rules that will execute, presented in their execution order. This list includes both common rules (that apply to every app) and rules that are specific for the app.
@@ -99,7 +99,7 @@ The first three values are the standard ones for every app protected by Auth0. T
 ## Try mode
 
 There is a "try mode" that can be accessed at /Apps/Try that allows the user to directly
-enter the account name and the api access token without using the configured values. 
+enter the account name and the API access token without using the configured values. 
 You can try this at [https://dashboardcompanion.azurewebsites.net/Apps/Try](https://dashboardcompanion.azurewebsites.net/Apps/Try).
 
 ![Try mode](http://i.imgur.com/e0EuP9W.png)
@@ -123,7 +123,7 @@ var rulesTask =
         .ContinueWith(t => t.Result.SelectMany(r => r));
 ```
 
-####Script analisis
+####Script analysis
 The parsing of the rule script to find a specific pattern is done with regular expressions in the `RulesScriptParser` class, with tests in the `RuleParsingTests` class.
 This would be the place to put fixes if you use a different pattern to identify applications in scripts.
 
