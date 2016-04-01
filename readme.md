@@ -5,7 +5,7 @@ Try it now at [https://dashboardcompanion.azurewebsites.net/Apps/Try](https://da
 
 [Rules](https://auth0.com/docs/rules) in [Auth0](https://auth0.com/) can be written to act on a specific app (client), as shown in the "**Whitelist for a specific app**" or the "**Allow access during weekdays for a specific app**" [rule templates](https://manage.auth0.com/#/rules/new).
 
-Those templates contains code that perform some action if the app name or id matches a specific string:
+Those templates contain code that perform some action if the app name or id matches a specific string:
 ```javascript
 function (user, context, callback) {
     if (context.clientName === 'TheAppToCheckAccessTo') {
